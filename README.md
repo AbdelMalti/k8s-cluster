@@ -35,14 +35,11 @@ sudo apt -y upgrade && sudo systemctl reboot
 
 ```
 sudo apt update
-sudo apt -y install curl apt-transport-https
+sudo apt -y install vim git curl wget kubelet kubectl
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 sudo apt-add-repository "deb http://apt.kubernetes.io/kubernetes-xenial main"
 
-
-sudo apt update
-sudo apt -y install vim git curl wget kubelet kubectl
-sudo apt-mark hold kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubectl
 
 kubectl version --client
 ```
@@ -50,6 +47,7 @@ kubectl version --client
 #### Step 2.1
 ```
 sudo apt -y install kubeadm
+sudo apt-mark hold kubeadm
 kubeadm version
 ```
 
