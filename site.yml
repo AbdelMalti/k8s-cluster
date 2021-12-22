@@ -1,13 +1,14 @@
 ---
 
 - hosts: all
+  become: yes
   roles:
   - role: common
 
-- hosts: master
-  roles:
-  - role: master
+# - hosts: master
+#   roles:
+#   - role: master
 
-- hosts: worker
-  roles:
-  - role: worker
+# - hosts: worker
+#   roles:
+#   - role: worker

@@ -1,5 +1,10 @@
 # How to install k8s on ubuntu
 
+## Ansible part
+
+`ansible-playbook -i hosts site.yml`
+`ansible-playbook site.yml -i hosts --user=vagrant --private-key=../local-vms/id_rsa_vagrant`
+
 ## Sources
 
 - [computingforgeeks](https://computingforgeeks.com/deploy-kubernetes-cluster-on-ubuntu-with-kubeadm/)

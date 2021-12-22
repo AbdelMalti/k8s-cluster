@@ -1,12 +1,12 @@
 ---
 - name: Update apt cache and make sure Vim, Curl and Unzip are installed
   apt:
-    name: "{{ item }}"
-    update_cache: yes
-    upgrade: dist
+    name: "{{item}}"
+    # update_cache: yes
+    # upgrade: dist
     cache_valid_time: 3600
-    force_apt_get: true
-    loop:
+    # force_apt_get: true
+  loop:
     - curl
     - apt-transport-https
     - vim 
@@ -19,4 +19,4 @@
   shell : |
     swapoff -a
 
-- name: Install containerd
+# - name: Install containerd
