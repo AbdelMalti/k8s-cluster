@@ -1,2 +1,19 @@
 ---
-# handlers file for common
+
+- name: restard containerd
+  systemd:
+    name: containerd
+    state: restarted
+
+# - name: restard containerd
+#   command: systemctl restart containerd
+
+# - name: restard containerd
+#   service:
+#     name: containerd
+#     state: restarted
+
+# Reload configs
+- name: Reload sysctl
+  become: true
+  command: /sbin/sysctl --system

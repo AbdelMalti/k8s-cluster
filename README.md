@@ -12,6 +12,8 @@
 - [CNI](https://www.suse.com/c/rancher_blog/comparing-kubernetes-cni-providers-flannel-calico-canal-and-weave/)
 - [Calico](https://projectcalico.docs.tigera.io/getting-started/kubernetes/self-managed-onprem/onpremises)
 - [Flannel](https://github.com/flannel-io/flannel#flannel)
+- [kubernetes setup using ansible and vagrant](https://kubernetes.io/blog/2019/03/15/kubernetes-setup-using-ansible-and-vagrant/)
+- [containerd playbook](https://github.com/geerlingguy/ansible-role-containerd/blob/master/tasks/main.yml)
 
 ## Steps
 
@@ -42,7 +44,7 @@ sudo apt -y upgrade && sudo systemctl reboot
 sudo apt update
 sudo apt -y install vim git curl wget kubelet kubectl
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-sudo apt-add-repository "deb http://apt.kubernetes.io/kubernetes-xenial main"
+sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
 
 sudo apt-mark hold kubelet kubectl
 
