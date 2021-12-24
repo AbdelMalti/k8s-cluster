@@ -131,7 +131,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 ```
 # For 50 nodes or less
-curl https://docs.projectcalico.org/manifests/calico.yaml -O
+curl https://docs.projectcalico.org/manifests/calico.yaml -O calico.yaml
 kubectl apply -f calico.yaml
 
 # For more than 50 nodes

@@ -29,6 +29,7 @@
     - gnupg2 
     - kubectl
     - kubelet
+    - kubeadm
     - ca-certificates
     - apt-transport-https
     - software-properties-common 
@@ -36,6 +37,7 @@
 - name: Disable swap
   shell : |
     swapoff -a
+  when: ansible_swaptotal_mb > 0
 
 - name: Containerd Config
   copy:
@@ -47,6 +49,14 @@
     src: kubernetes.conf
     dest: /etc/sysctl.d/kubernetes.conf
   notify: Reload sysctl
+
+- name: Enable bridge firewall for iptable
+  modprobe:
+    name: "{{item}}"
+    state: present
+  loop:
+    - overlay
+    - br_netfilter
 
 - name: Add Docker repo
   apt_key:

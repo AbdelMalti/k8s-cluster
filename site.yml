@@ -5,9 +5,9 @@
   roles:
   - role: common
 
-# - hosts: master
-#   roles:
-#   - role: master
+- hosts: master
+  roles:
+  - role: master
 
 # - hosts: worker
 #   roles:
