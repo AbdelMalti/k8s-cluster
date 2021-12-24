@@ -1,2 +1,23 @@
 ---
 # tasks file for worker
+
+- name: Copy file of join command
+  become: true
+  become_user: root
+  copy:
+    src: join-command
+    dest: /tmp/join-command.sh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Check if k8s-worker have already joined the cluster
+  stat:
+    path: /etc/kubernetes/kubelet.conf
+  register: worker_joined
+
+- name: Worker joinning cluster
+  become: true
+  become_user: root
+  command: sh /tmp/join-command.sh
+  when: not worker_joined.stat.exists
