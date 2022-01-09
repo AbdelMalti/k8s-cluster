@@ -35,6 +35,12 @@
   command: kubeadm token create --print-join-command
   register: join_command
 
-- name:
+- name: Copy k8s join command in a file locally
   local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./roles/worker/files/join-command"
+
+- name: Copy kubeconfig locally
+  fetch:
+    src: /home/vagrant/.kube/config
+    dest: ~/.kube/vagrant-cluster.config
+    flat: yes
 

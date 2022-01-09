@@ -2,7 +2,7 @@
 
 ## Ansible part
 
-`ansible-playbook -i hosts site.yml`
+`ansible-playbook -i hosts site.yml`    
 `ansible-playbook site.yml -i hosts --user=vagrant --private-key=../local-vms/id_rsa_vagrant`
 
 ## Sources
