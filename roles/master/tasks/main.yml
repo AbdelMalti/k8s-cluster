@@ -6,10 +6,22 @@
     path: /etc/kubernetes/admin.conf
   register: k8s_admin_file
 
-- name: Initializing k8s cluster
+# - name: Initializing k8s cluster
+#   become: true
+#   become_user: root
+#   command: kubeadm init --apiserver-advertise-address="192.168.135.10" --apiserver-cert-extra-sans="192.168.135.10" --pod-network-cidr=10.10.0.0/16 --cri-socket /run/containerd/containerd.sock --upload-certs 
+#   when: not k8s_admin_file.stat.exists
+
+- name: kubeadm preflight
   become: true
   become_user: root
-  command: kubeadm init --apiserver-advertise-address="192.168.135.10" --pod-network-cidr=192.168.0.0/16 --cri-socket /run/containerd/containerd.sock --upload-certs 
+  command: kubeadm config images pull
+  when: not k8s_admin_file.stat.exists
+
+- name: Initialize the Kubernetes cluster using kubeadm
+  become: true
+  become_user: root
+  command: kubeadm init --apiserver-advertise-address="192.168.135.10" --apiserver-cert-extra-sans="192.168.135.10"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16  --ignore-preflight-errors Swap
   when: not k8s_admin_file.stat.exists
 
 - name: Check if kubeconfig have been created

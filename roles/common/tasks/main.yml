@@ -1,5 +1,26 @@
 ---
 
+- name: Disable SWAP in fstab since kubernetes can't work with swap enabled (1/2)
+  shell : |
+    swapoff -a
+  when: ansible_swaptotal_mb > 0
+
+# - name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
+#   replace:
+#     path: /etc/fstab
+#     regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+#     replace: '# \1'
+#   when: ansible_swaptotal_mb > 0
+
+- name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
+  mount:
+    name: "{{ item }}"
+    fstype: swap
+    state: absent
+  with_items:
+    - swap
+    - none
+
 - name: Update OS
   apt:
     update_cache: yes
@@ -7,38 +28,20 @@
     cache_valid_time: 3600
     # upgrade: dist
 
-- name: Add google key
-  apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    state: present
-
-- name: Add deb repository for kubenetes
-  apt_repository:
-    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
-    state: present
-    filename: kubernetes
-
 - name: Install packages
   apt:
     name: "{{item}}"
+    update_cache: yes
   loop:
     - git
     - vim 
     - curl
     - wget
+    - gnupg
     - gnupg2 
-    - kubectl
-    - kubelet
-    - kubeadm
     - ca-certificates
     - apt-transport-https
     - software-properties-common 
-
-- name: Disable swap
-  shell : |
-    swapoff -a
-  when: ansible_swaptotal_mb > 0
-
 - name: Containerd Config
   copy:
     src: containerd.conf
@@ -63,12 +66,16 @@
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
 
+- name: Check os distro
+  command: lsb_release -cs
+  register: os_distrio
+
 - name: Add deb repository for docker repo
   apt_repository: 
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable
     state: present
     filename: docker
-  when: ansible_distribution_release == "xenial"
+  when: ansible_distribution_release == {{os_distrio}}
 
 - name: Install containerd
   apt:
@@ -86,3 +93,42 @@
     content: "{{ containerd_config.stdout }}"
     dest: /etc/containerd/config.toml
   notify: restard containerd
+
+# - name: Install docker and its dependecies
+#   apt: 
+#     name: "{{ packages }}"
+#     state: present
+#     update_cache: yes
+#   vars:
+#     packages:
+#     - docker-ce 
+#     - docker-ce-cli 
+#     - containerd.io
+#   notify:
+#     - docker status
+
+- name: Add google key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Add deb repository for kubenetes
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: kubernetes
+    update_cache: yes
+
+- name: Install kubelet kubeadm kubectl
+  apt:
+    name: "{{item}}"
+    update_cache: yes
+  loop:
+    - kubectl
+    - kubelet
+    - kubeadm
+
+# - name: Add vagrant user to docker group
+#   user:
+#     name: vagrant
+#     group: docker

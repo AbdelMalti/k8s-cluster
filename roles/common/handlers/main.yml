@@ -4,6 +4,7 @@
   systemd:
     name: containerd
     state: restarted
+    enabled: yes
 
 # - name: restard containerd
 #   command: systemctl restart containerd
@@ -17,3 +18,8 @@
 - name: Reload sysctl
   become: true
   command: /sbin/sysctl --system
+
+- name: docker status
+  service: 
+    name: docker 
+    state: started
