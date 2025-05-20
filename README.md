@@ -1,5 +1,8 @@
 # How to install k8s on ubuntu
 
+## If you need VMs localy
+Follow the README in this github repo [local-vms](https://github.com/AbdelMalti/local-vms)
+
 ## Ansible part
 
 `ansible-playbook -i hosts site.yml`    
